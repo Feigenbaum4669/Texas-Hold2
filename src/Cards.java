@@ -13,6 +13,10 @@ public class Cards {
 	public void addCard(Card c) {
 		CardStack.add(c);
 	}
+	
+	public void setCards(List<Card> cards) {
+		CardStack=cards;
+	}
 
 	public void removeCard(Integer i) {
 		CardStack.remove(getCard(i));

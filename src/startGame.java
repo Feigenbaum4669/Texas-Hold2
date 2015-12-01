@@ -1,44 +1,12 @@
 
-public class startGame implements TableState {
+public class startGame extends TableState {
 	
-	 startGame(){
-		
-	}
-
-	@Override
-	public void Check() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void Bet() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void Raise() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void Call() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void Fold() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void AllIn() {
-		// TODO Auto-generated method stub
-		
-	}
+    public void Auto(TableAppliance tab){
+	tab.initializeCredits();
+	tab.setdealerButton(1);
+	tab.setState(tab.collectSmallBlindState);
+	tab.Auto();
+    }
+    
 
 }

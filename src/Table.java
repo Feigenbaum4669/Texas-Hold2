@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 import java.util.List;
 
-class gameHasStartedException extends Exception {
+class gameHasStartedException extends Exception  {
 	private static final long serialVersionUID = 1L;
 
 	gameHasStartedException() {
@@ -12,6 +12,20 @@ class gameHasStartedException extends Exception {
 		super(msg);
 	}
 }
+
+class sizeofSetException extends Exception  {
+	private static final long serialVersionUID = 1L;
+
+	sizeofSetException() {
+		super();
+	}
+
+	sizeofSetException(String msg) {
+		super(msg);
+	}
+}
+
+
 
 class NoofPlayersException extends Exception {
 	private static final long serialVersionUID = 1L;
@@ -25,32 +39,35 @@ class NoofPlayersException extends Exception {
 	}
 }
 
-public class Table {
+public class Table extends TableAppliance {
 	
-		private Deck TableDeck;
-		private List<Player> Players;
-		
-		private int smallBlind;
-		private int bigBlind;
-		
-		private Limit lim;
-		private int fixed;
-		private int maxRaise;
-		private int gameSize;
-		Boolean gameStarted;
-		Boolean blockNewPlayers;
+	private Deck TableDeck;
+	private List<Player> Players;
+	private List<Integer> Credits;
+	private List<Cards> PlayersCards;
+	private int smallBlind;
+	private int bigBlind;	
+	private Limit lim;
+	private int fixed;
+	private int maxRaise;
+	private int gameSize;
+	private int dealerButton;
+	private int initCredit;
+	private int bank;
+	Boolean gameStarted;
+	Boolean blockNewPlayers;
 		
 		//ustawienie parametrów gry; (nie)wywołanie przygotowania gry
-		Table(int gameSize, Limit lim, int smallBlind, int bigBlind, int fixed,int maxRaise) {
-			
+		Table(int gameSize, int initCredit, Limit lim, int smallBlind, int bigBlind, int fixed,int maxRaise) {
+			super();
 			gameStarted=false;
 			blockNewPlayers=false;
+			this.initCredit=initCredit;
 			this.gameSize=gameSize;
-			
 			this.smallBlind=smallBlind;
-			this.bigBlind=bigBlind;
-			
+			this.bigBlind=bigBlind;	
 			this.lim=lim;
+			this.bank=0;
 			
 			if(this.lim==Limit.fixed_limit){
 			this.fixed=fixed;
@@ -65,7 +82,7 @@ public class Table {
 
 		}
 		//tworzy nową talię
-		private void newGame() {
+		protected void newDeck() {
 			TableDeck.newDeck();
 		}
 		//tworzy pusta talię oraz pustą liczbę graczy; gdy zgłoszona jest odpowiednia liczba graczy to uruchamia maszynę stanów
@@ -76,13 +93,12 @@ public class Table {
 			}
 			
 			gameStarted=true;
-			TableDeck = new Deck();
+			newDeck();
 			Players = new LinkedList<Player>();
 						
-			//tworzy maszyne stanów
-			TableContext TableStateMachine=new TableContext();
-			//inicjaluzje maszynę stanów stanem początkowym
-			TableStateMachine.setState(new TableState startGame);
+			//inicjalizuje stan początkowy
+			setState(startGameState);
+			Auto();
 			
 		}
 		
@@ -127,8 +143,12 @@ public class Table {
 		private void shuffleDeck() {
 			TableDeck.shuffle();
 		}
+		
+		private void setCredit(Integer index,Integer value){
+			this.Credits.set(index, value);
+		}
 
-		/*private void deal(Integer sizeofSet) throws sizeofSetException {
+		protected void deal(Integer sizeofSet) throws sizeofSetException {
 			if (sizeofSet < 1) {
 				throw new sizeofSetException("Trzeba rozdać przynajmnniej jedną kartę!");
 			}
@@ -140,10 +160,14 @@ public class Table {
 			Integer cardstodeal = countPlayers() * sizeofSet;
 
 			for (Integer i = 0; i < cardstodeal; i++) {
-				Players.get(i % countPlayers()).takeCard(TableDeck.giveCard(0));
+				givePlayerACard(i % countPlayers(),TableDeck.giveCard(0));
 			}
 
-		}*/
+		}
+		
+		protected void givePlayerACard(Integer p, Card c){
+			PlayersCards.get(p).addCard(c);
+		}
 
 		private Player getPlayer(Integer i) {
 			return Players.get(i);
@@ -157,11 +181,11 @@ public class Table {
 			return TableDeck;
 		}
 		
-		public int getSmall_Blind(){
+		public int getSmallBlind(){
 			return this.smallBlind;
 		}
 		
-		public int getBig_Blind(){
+		public int getBigBlind(){
 			return this.bigBlind;
 		}
 		
@@ -169,7 +193,7 @@ public class Table {
 			return this.lim;
 		}
 		
-		public int getMax_Raise(){
+		public int getMaxRaise(){
 			return this.maxRaise;
 		}
 		
@@ -180,4 +204,49 @@ public class Table {
 		public int getGameSize(){
 			return this.gameSize;
 		}
+		
+		public int getCredits(Integer p){
+			return this.Credits.get(p);
+		}
+		
+		protected void setCredits(Integer p,Integer value){
+			 this.Credits.set(p,value);
+		}
+		
+		
+		
+		//trzeba to zabezpieczyć (weryfikacja użytkownika)!
+		public Cards getPlayerCards(Integer p){
+			return this.PlayersCards.get(p);
+		}
+		
+		protected void setPlayerCards(Integer p, Cards cards){
+			this.PlayersCards.set(p, cards);
+		}
+		
+		protected void initializeCredits(){
+			for(Integer i=0;i<countPlayers();i++){
+				setCredit(i,initCredit);
+			}
+		}
+		
+		protected void setdealerButton(Integer p){
+			dealerButton=p;
+		}
+		
+		public int getdealerButton(){
+			return this.dealerButton;
+		}
+		
+		protected void setBank(Integer b){
+			this.bank=b;
+		}
+		
+		public int getBank(){
+			return bank;
+		}
+		
+		
+		
+		
 }

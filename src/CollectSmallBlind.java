@@ -1,40 +1,13 @@
 
-public class CollectSmallBlind implements TableState {
+public class CollectSmallBlind extends TableState {
 
-	@Override
-	public void Check() {
-		// TODO Auto-generated method stub
-		
+	public void Auto(TableAppliance tab){
+		tab.setBank(tab.getBank()+tab.getSmallBlind());
+		tab.setCredits(tab.getdealerButton()+1, tab.getCredits(tab.getdealerButton()+1)-tab.getSmallBlind());
+		tab.setState(tab.collectBigBlindState);
+		tab.Auto();
+	    }
 	}
-
-	@Override
-	public void Bet() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void Raise() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void Call() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void Fold() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void AllIn() {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 }
