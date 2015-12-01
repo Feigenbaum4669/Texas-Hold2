@@ -15,6 +15,7 @@ public abstract class TableAppliance {
 	protected SumUp SumUpState;
 	protected ThirdBid ThirdBidState;
 	protected Turn TurnState;
+	protected NewTurn NewTurnState;
 	
 	TableAppliance(){
 		startGameState=new startGame();
@@ -41,13 +42,16 @@ public abstract class TableAppliance {
 	public abstract int getSmallBlind();
 	public abstract int getBigBlind();
 	protected abstract void newDeck();
-	protected abstract void deal(Integer sizeofSet);
+	protected abstract void deal(Integer sizeofSet)throws sizeofSetException;
+	protected abstract void addCardOnTable(Card c);
+	protected abstract Card takeCardFromDeck();
 	
 	
 	
 	
-	public void setState(TableState state ){
-		TState=state;
+	protected void setState(TableState state ){
+		Auto();
+		
 	}
 	
 	public TableState getState(){
@@ -89,7 +93,7 @@ public abstract class TableAppliance {
 		
 	}
 	
-	public void Auto(){
+	protected void Auto(){
 		TState.Auto(this);
 	}
 

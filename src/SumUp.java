@@ -1,40 +1,11 @@
 
 public class SumUp extends TableState {
 
-	
-	public void Check() {
-		// TODO Auto-generated method stub
+	public void Auto(TableAppliance tab){
 		
-	}
-
+		tab.setState(tab.NewTurnState);
+		//tab.Auto();
+	    }
 	
-	public void Bet() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-	public void Raise() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-	public void Call() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-	public void Fold() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-	public void AllIn() {
-		// TODO Auto-generated method stub
-		
-	}
 
 }

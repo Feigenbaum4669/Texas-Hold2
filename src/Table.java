@@ -42,6 +42,7 @@ class NoofPlayersException extends Exception {
 public class Table extends TableAppliance {
 	
 	private Deck TableDeck;
+	private Cards CardsOnTable;
 	private List<Player> Players;
 	private List<Integer> Credits;
 	private List<Cards> PlayersCards;
@@ -165,6 +166,10 @@ public class Table extends TableAppliance {
 
 		}
 		
+		protected Card takeCardFromDeck(){
+			return this.TableDeck.giveCard(0);
+		}
+		
 		protected void givePlayerACard(Integer p, Card c){
 			PlayersCards.get(p).addCard(c);
 		}
@@ -244,6 +249,17 @@ public class Table extends TableAppliance {
 		
 		public int getBank(){
 			return bank;
+		}
+		
+		public Cards getCardsOnTable(){
+			return this.CardsOnTable;
+		}
+		
+		protected void setCardsOnTable(Cards c){
+			this.CardsOnTable=c;
+		}
+		protected void addCardOnTable(Card c){
+			this.CardsOnTable.addCard(c);
 		}
 		
 		
