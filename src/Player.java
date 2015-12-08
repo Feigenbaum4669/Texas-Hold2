@@ -23,6 +23,14 @@ public class Player {
 	public Integer countCards() {
 		return PlayerCards.sizeof();
 	}
-
+	
+	public VAction makeAction(gameInfo gi){
+		VAction va= new VAction();
+		va.action=Action.bet;
+		va.value=10;
+		return va;
+		}
+	public void notify(String msg){
+		//...
+	}
 }
-

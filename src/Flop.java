@@ -2,7 +2,7 @@
 public class Flop extends TableState{
 
 	
-	public void Auto(TableAppliance tab){
+	public void Auto(Table tab){
 		tab.addCardOnTable(tab.takeCardFromDeck());
 		tab.addCardOnTable(tab.takeCardFromDeck());
 		tab.addCardOnTable(tab.takeCardFromDeck());

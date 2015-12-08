@@ -1,7 +1,7 @@
 
 public class SumUp extends TableState {
 
-	public void Auto(TableAppliance tab){
+	public void Auto(Table tab){
 		
 		tab.setState(tab.NewTurnState);
 		//tab.Auto();

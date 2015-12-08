@@ -2,7 +2,7 @@
 public class FirstDeal extends TableState  {
 
 	
-	public void Auto(TableAppliance tab){
+	public void Auto(Table tab){
 		try{
 		tab.deal(2);
 		}catch(sizeofSetException ex){
