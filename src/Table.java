@@ -531,11 +531,17 @@ public class Table  {
 				this.getSystemPlayer(i).setPlayerBet(0);
 			}
 		}
+		/*
 		public void initializeNonFoldedPlayers(){
 			for(int i=0;i<countPlayers();i++){
 				if(this.getSystemPlayer(i).getPlayerStatus()!=PlayerStatus.folded){
 					this.getSystemPlayer(i).setPlayerStatus(PlayerStatus.init);
 				}
+		}
+		}*/
+		public void initializePlayers(){
+			for(int i=0;i<countPlayers();i++){
+					this.getSystemPlayer(i).setPlayerStatus(PlayerStatus.init);	
 		}
 		}
 		

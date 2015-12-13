@@ -7,8 +7,8 @@ public class client {
 		Limit lim=Limit.no_limit;
 		int smallBlind=10;
 		int bigBlind=20;
-		int fixed=0;
-		int maxRaise=0;
+		int fixed=2;
+		int maxRaise=20;
 		
 		Player p0=new Player("p0");
 		Player p1=new Player("p1");

@@ -109,7 +109,7 @@ public class SecondBid extends TableState {
 		Decode(getAction());
 	}else if(betincr>0) {
 		int diff=maxBet+betincr-currBet;
-		if((lim==Limit.no_limit)||(lim==Limit.fixed_limit&&betincr<=maxRaiseValue&&raiseCounter<=maxRaiseCount)||(lim==Limit.pot_limit&&betincr<=pot)){
+		if((lim==Limit.no_limit)||(lim==Limit.fixed_limit&&betincr<=maxRaiseValue&&raiseCounter<maxRaiseCount)||(lim==Limit.pot_limit&&betincr<=pot)){
 		try{
 			tab.getSystemPlayer(CurrPlayer).incrPlayerBet(diff);
 			raiseCounter+=1;
@@ -123,11 +123,12 @@ public class SecondBid extends TableState {
 			if(lim==Limit.pot_limit){
 			tab.getSystemPlayer(CurrPlayer).notify("Nie można podbijać o więcej niż jest w puli! (pot-limit)");
 			}else{
-				if(raiseCounter>maxRaiseCount){
+				if(raiseCounter>=maxRaiseCount){
 					tab.getSystemPlayer(CurrPlayer).notify("Przekroczono dopuszczalną liczbę podbić w tej rundzie licytacji (fixed-limit)!");
 				}else{
+					tab.getSystemPlayer(CurrPlayer).notify("Podana wartość przekracz limit podbicia (fixed-limit)!");
 				}
-			tab.getSystemPlayer(CurrPlayer).notify("Podana wartość przekracz limit podbicia (fixed-limit)!");
+			
 			}
 			Decode(getAction());
 		}

@@ -16,9 +16,9 @@ public class FirstBid extends TableState {
 	public void Auto(Table tab){
 		setTab(tab);
 		
-		int firstround=tab.countActivePlayers()-2;
+		//int firstround=tab.countActivePlayers()-2;
 		
-		for(int i=0;i<firstround;i++){
+		for(int i=0;i<tab.countActivePlayers();i++){
 			try{
 				setPlayer(tab.nextActivePlayer(tab.getlastActivePlayer()));
 				tab.setlastActivePlayer(CurrPlayer);
@@ -90,25 +90,26 @@ public class FirstBid extends TableState {
 		Decode(getAction());
 	}else if(betincr>0) {
 		int diff=maxBet+betincr-currBet;
-		if((lim==Limit.no_limit)||(lim==Limit.fixed_limit&&betincr<=maxRaiseValue&&raiseCounter<=maxRaiseCount)||(lim==Limit.pot_limit&&betincr<=pot)){
-		try{
+		if((lim==Limit.no_limit)||(lim==Limit.fixed_limit&&betincr<=maxRaiseValue&&raiseCounter<maxRaiseCount)||(lim==Limit.pot_limit&&betincr<=pot)){
+				try{
 			tab.getSystemPlayer(CurrPlayer).incrPlayerBet(diff);
 			raiseCounter+=1;
 			tab.getSystemPlayer(CurrPlayer).setPlayerStatus(PlayerStatus.max_bet_nbb);
 			tab.ChangeActivePlayersStatusExcept(PlayerStatus.under_max_bet, CurrPlayer);
-		}catch(NotEnoughCreditsException ex){
+					}catch(NotEnoughCreditsException ex){
 			tab.getSystemPlayer(CurrPlayer).notify("Za mało żetonów aby przebić maksymalny zakład o podaną stawkę!");
 			Decode(getAction());
-		}}
+					}
+		}
 		else{
 			if(lim==Limit.pot_limit){
 			tab.getSystemPlayer(CurrPlayer).notify("Nie można podbijać o więcej niż jest w puli! (pot-limit)");
 			}else{
-				if(raiseCounter>maxRaiseCount){
+					if(raiseCounter>=maxRaiseCount){
 					tab.getSystemPlayer(CurrPlayer).notify("Przekroczono dopuszczalną liczbę podbić w tej rundzie licytacji (fixed-limit)!");
-				}else{
-				}
+					}else{
 			tab.getSystemPlayer(CurrPlayer).notify("Podana wartość przekracz limit podbicia (fixed-limit)!");
+					}
 			}
 			Decode(getAction());
 		}
@@ -121,7 +122,7 @@ public class FirstBid extends TableState {
 	}
 
 	//OK
-	public void Call() throws BidLogicErrorException {
+	public void Call()  {
 		if(tab.getSystemPlayer(CurrPlayer).getPlayerBet()<tab.getMaxBet()){
 			try{
 				int currBet=tab.getSystemPlayer(CurrPlayer).getPlayerBet();
@@ -134,8 +135,8 @@ public class FirstBid extends TableState {
 			}
 		}else{
 			tab.getSystemPlayer(CurrPlayer).notify("Aktualny zakład jest już najwyższy!");
-			throw new BidLogicErrorException("Błąd licytacji: kolejka wróciła do gracza o najwyższym zakładzie!");
-			//Decode(getAction());
+			
+			Decode(getAction());
 		}	
 	}
 	//OK
@@ -164,7 +165,7 @@ public class FirstBid extends TableState {
 	}
 	
 	public void Decode(VAction a)  {
-		try{
+		
 		switch(a.action){
 		case fold:
 		Fold();
@@ -185,9 +186,7 @@ public class FirstBid extends TableState {
 		AllIn();
 		break;
 					}
-		}catch(BidLogicErrorException ex){
-		tab.getSystemPlayer(CurrPlayer).notify("FATALNY BŁĄD licytacji");
-		}
+		
 		}
 }
 
