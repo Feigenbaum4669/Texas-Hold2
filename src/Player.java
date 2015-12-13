@@ -1,4 +1,9 @@
+import java.io.BufferedReader;
 import java.io.Console;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
+
 
 public class Player {
 	private Cards PlayerCards;
@@ -8,6 +13,21 @@ public class Player {
 	private Integer Bet;
 	private Integer hBet;
 	private Integer bank;
+	
+	public static String getInput(String prompt) {
+	    BufferedReader in = new BufferedReader(
+	            new InputStreamReader(System.in));
+
+	    System.out.print(prompt);
+	    System.out.flush();
+
+	    try {
+	        return in.readLine();
+	    } catch (IOException e) {
+	        return "Error: " + e.getMessage();
+	    }
+
+	}
 	
 	Console console=System.console();
 
@@ -44,9 +64,9 @@ public class Player {
 		System.out.println("Make decision "+this.name);
 		System.out.println("INFO: status: "+this.status+" highestBet: "+hBet+" Bank: "+this.bank+" credits: "+this.Credits+" bet: "+this.Bet);
 		System.out.println("command:");
-		int i=Integer.parseInt(console.readLine());
+		int i=Integer.parseInt(getInput(""));
 		System.out.println("value:");
-		int j=Integer.parseInt(console.readLine());
+		int j=Integer.parseInt(getInput(""));
 		switch(i){
 		case 0:
 		va.action=Action.check;

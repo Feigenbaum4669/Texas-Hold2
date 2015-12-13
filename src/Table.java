@@ -345,7 +345,7 @@ public class Table  {
 		public void incrBank(Integer gain){
 			this.bank=this.bank+gain;
 		}
-		
+		/*
 		public int evalBank(){
 			int value=0;
 			for(int i=0;i<countPlayers();i++){
@@ -354,9 +354,15 @@ public class Table  {
 			this.bank=value;
 			return value;
 		}
+		*/
 		
 		public int getBank(){
-			return bank;
+			int value=0;
+			for(int i=0;i<countPlayers();i++){
+				value+=this.getSystemPlayer(i).getPlayerBet();
+			}
+			this.bank=value;
+			return value;
 		}
 		
 		public Cards getCardsOnTable(){
@@ -530,7 +536,7 @@ public class Table  {
 		
 		public gameInfo getgameInfo(Integer player){
 			fill();//fills bets,PlayersStatus,credits 
-			gi.bank=this.evalBank();
+			gi.bank=this.getBank();
 			gi.TState=this.TState;
 			gi.CardsOnTable=this.CardsOnTable;
 			gi.Credits=this.Credits;

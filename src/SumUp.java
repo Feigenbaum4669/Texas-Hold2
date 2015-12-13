@@ -8,7 +8,7 @@ public class SumUp extends TableState {
 		//zabierz karty graczom oraz ze stołu
 		tab.cleanCards();
 		//podziel bank między graczy (update kredytów)
-		  tab.getSystemPlayer(0).incrPlayerCredits(tab.evalBank());
+		  tab.getSystemPlayer(0).incrPlayerCredits(tab.getBank());
 		//wykasuj bank
 		tab.setBank(0);
 		

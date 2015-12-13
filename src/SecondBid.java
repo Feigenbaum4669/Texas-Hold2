@@ -48,7 +48,8 @@ public class SecondBid extends TableState {
 	public void Check() {
 		PlayerStatus status=tab.getSystemPlayer(CurrPlayer).getPlayerStatus();
 		if(status==PlayerStatus.under_max_bet){
-			tab.getSystemPlayer(CurrPlayer).notify("Nie można podtrzymać stawki - została przebita.");	
+			tab.getSystemPlayer(CurrPlayer).notify("Nie można podtrzymać stawki - została przebita.");
+			Decode(getAction());
 		}else
 		{
 			//player zcheckował//
