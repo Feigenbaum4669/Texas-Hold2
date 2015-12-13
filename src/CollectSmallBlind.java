@@ -17,6 +17,7 @@ public class CollectSmallBlind extends TableState {
 			}catch(NotEnoughCreditsException ex){
 				if(tab.getSystemPlayer(CurrPlayer).getPlayerCredits()==0){
 					tab.getSystemPlayer(CurrPlayer).setPlayerStatus(PlayerStatus.folded);
+					nextState=tab.collectSmallBlindState;
 				}else{
 					tab.getSystemPlayer(CurrPlayer).allIn();
 					tab.incrBank(tab.getSystemPlayer(CurrPlayer).getPlayerCredits());

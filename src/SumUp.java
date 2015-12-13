@@ -2,7 +2,9 @@
 public class SumUp extends TableState {
 
 	public void Auto(Table tab){
-		
+		for(int i=0;i<tab.countPlayers();i++){
+		System.out.println("player: "+i+"status: "+tab.getSystemPlayer(i).getPlayerStatus());
+		}
 		//wyłoń zwycięzców spośród wszystkich niesflodowanych
 		//...
 		//zabierz karty graczom oraz ze stołu

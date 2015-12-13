@@ -19,6 +19,8 @@ public class SecondBid extends TableState {
 		initialbet=tab.getMaxBet();
 		tab.setlastActivePlayer(tab.getdealerButton());
 		
+		if(tab.countActivePlayers()>1){
+			
 		for(int i=0;i<tab.countActivePlayers();i++){
 			try{
 				setPlayer(tab.nextActivePlayer(tab.getlastActivePlayer()));
@@ -38,6 +40,7 @@ public class SecondBid extends TableState {
 			}catch(RunOutOfActivePlayersException ex){
 				break;
 			}
+		}
 		}
 		tab.setState(tab.TurnState);
 		//tab.Auto();

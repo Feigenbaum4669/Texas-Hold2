@@ -1,61 +1,7 @@
 import java.util.LinkedList;
 
-class gameHasStartedException extends Exception  {
-	private static final long serialVersionUID = 1L;
-
-	gameHasStartedException() {
-		super();
-	}
-
-	gameHasStartedException(String msg) {
-		super(msg);
-	}
-}
-
-
-
-
-class RunOutOfPlayersException extends Exception  {
-	private static final long serialVersionUID = 1L;
-
-	RunOutOfPlayersException() {
-		super();
-	}
-
-	RunOutOfPlayersException(String msg) {
-		super(msg);
-	}
-}
-
-
-class sizeofSetException extends Exception  {
-	private static final long serialVersionUID = 1L;
-
-	sizeofSetException() {
-		super();
-	}
-
-	sizeofSetException(String msg) {
-		super(msg);
-	}
-}
-
-
-
-class NoofPlayersException extends Exception {
-	private static final long serialVersionUID = 1L;
-
-	NoofPlayersException() {
-		super();
-	}
-
-	NoofPlayersException(String msg) {
-		super(msg);
-	}
-}
-
 public class Table  {
-	
+	//głowne pola
 	private Deck TableDeck;
 	private Cards CardsOnTable;
 	private LinkedList<SystemPlayer> Players;
@@ -76,11 +22,12 @@ public class Table  {
 	private int lastActivePlayer;
 	private gameInfo gi;
 	private InitParams ip;
+	private boolean exitSignal;
 	Boolean gameStarted;
 	Boolean blockNewPlayers;
-	
+	//aktualny stan stołu
 	private TableState TState;
-	
+	//stany maszyny stanów stołu
 	public startGame startGameState;
 	public CollectBigBlind collectBigBlindState;
 	public CollectSmallBlind collectSmallBlindState;
@@ -98,19 +45,22 @@ public class Table  {
 		
 		//ustawienie parametrów gry; 
 		public Table(int gameSize, int initCredit, Limit lim, int smallBlind, int bigBlind, int fixed,int maxRaise) {
-		Players=new LinkedList<SystemPlayer>();
-		Credits=new LinkedList<Integer>();
-		Bets=new LinkedList<Integer>();
-		PlayersCards=new LinkedList<Cards>();
-		PlayersStatus=new LinkedList<PlayerStatus>();
-		TableDeck=new Deck();
-		CardsOnTable=new Cards();
+		this.exitSignal=false;
+		this.gameStarted=false;
+		this.blockNewPlayers=false;
+				
+		this.Players=new LinkedList<SystemPlayer>();
+		this.Credits=new LinkedList<Integer>();
+		this.Bets=new LinkedList<Integer>();
+		this.PlayersCards=new LinkedList<Cards>();
+		this.PlayersStatus=new LinkedList<PlayerStatus>();
+		this.TableDeck=new Deck();
+		this.CardsOnTable=new Cards();
 	
-			ip=new InitParams(gameSize,initCredit,lim,smallBlind,bigBlind,fixed,maxRaise);
-			gi=new gameInfo(ip);
+		this.ip=new InitParams(gameSize,initCredit,lim,smallBlind,bigBlind,fixed,maxRaise);
+		this.gi=new gameInfo(ip);
 			initializeTableStates();
-			gameStarted=false;
-			blockNewPlayers=false;
+			;
 			this.initCredit=initCredit;
 			this.gameSize=gameSize;
 			this.smallBlind=smallBlind;
@@ -121,15 +71,13 @@ public class Table  {
 			if(this.lim==Limit.fixed_limit){
 			this.fixed=fixed;
 			this.maxRaise=maxRaise;
-			}else
-			{
+			}else{
 				this.fixed=0;
 				this.maxRaise=0;
-			}		
-			//startGame();
-		
-
+			     }	
 		}
+		
+		
 		//tworzy nową talię
 		public void newDeck() {
 			this.TableDeck.newDeck();
@@ -148,7 +96,7 @@ public class Table  {
 						
 			//inicjalizuje stan początkowy
 			setState(startGameState);
-			while(true){
+			while(exitSignal==false){
 				System.out.println("Table state: "+this.TState);
 				Auto();
 			}
@@ -474,7 +422,7 @@ public class Table  {
 		}
 		
 		public void end(){
-			//...
+			this.exitSignal=true;
 		}
 		/*
 		public Integer findHighestBet(){
