@@ -1,11 +1,20 @@
-
-
+import java.io.Console;
 
 public class Player {
 	private Cards PlayerCards;
+	private String name;
+	private PlayerStatus status;
+	private Integer Credits;
+	private Integer Bet;
+	private Integer hBet;
+	private Integer bank;
+	
+	Console console=System.console();
 
-	Player() {
+	public Player(String name) {
 		PlayerCards = new Cards();
+		this.name=name;
+		System.out.println("Player created:"+this.name);
 	}
 
 	public void takeCard(Card c) {
@@ -25,12 +34,43 @@ public class Player {
 	}
 	
 	public VAction makeAction(gameInfo gi){
+		this.PlayerCards=gi.PlayerCards;
+		this.status=gi.ThisPlayerStatus;
+		this.Credits=gi.ThisPlayerCredits;
+		this.Bet=gi.ThisPlayerBets;
+		this.hBet=gi.highestBet;
+		this.bank=gi.bank;
 		VAction va= new VAction();
+		System.out.println("Make decision "+this.name);
+		System.out.println("INFO: status: "+this.status+" highestBet: "+hBet+" Bank: "+this.bank+" credits: "+this.Credits+" bet: "+this.Bet);
+		System.out.println("command:");
+		int i=Integer.parseInt(console.readLine());
+		System.out.println("value:");
+		int j=Integer.parseInt(console.readLine());
+		switch(i){
+		case 0:
+		va.action=Action.check;
+		break;
+		case 1:
 		va.action=Action.bet;
-		va.value=10;
+		break;
+		case 2:
+		va.action=Action.call;
+		break;
+		case 3:
+		va.action=Action.raise;
+		break;
+		case 4:
+		va.action=Action.fold;
+		break;
+		case 5:
+		va.action=Action.all_in;
+		break;
+					}	
+		va.value=j;
 		return va;
 		}
 	public void notify(String msg){
-		//...
+		System.out.println("Notka: "+msg+"\n");
 	}
 }

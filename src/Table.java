@@ -1,4 +1,4 @@
-import java.util.List;
+import java.util.LinkedList;
 
 class gameHasStartedException extends Exception  {
 	private static final long serialVersionUID = 1L;
@@ -11,6 +11,22 @@ class gameHasStartedException extends Exception  {
 		super(msg);
 	}
 }
+
+
+
+
+class RunOutOfPlayersException extends Exception  {
+	private static final long serialVersionUID = 1L;
+
+	RunOutOfPlayersException() {
+		super();
+	}
+
+	RunOutOfPlayersException(String msg) {
+		super(msg);
+	}
+}
+
 
 class sizeofSetException extends Exception  {
 	private static final long serialVersionUID = 1L;
@@ -42,18 +58,16 @@ public class Table  {
 	
 	private Deck TableDeck;
 	private Cards CardsOnTable;
-	private List<Player> Players;
-	private List<Integer> Credits;
-	private List<Integer> Bets;
-	private List<Cards> PlayersCards;
-	private List<Boolean> AllIn;
-	private List<Boolean> Folded;
-	private List<Boolean> Active;
+	private LinkedList<SystemPlayer> Players;
+	private LinkedList<Integer> Credits;
+	private LinkedList<Integer> Bets;
+	private LinkedList<Cards> PlayersCards;
+	private LinkedList<PlayerStatus> PlayersStatus;
 	private int smallBlind;
 	private int bigBlind;	
 	private Limit lim;
-	private int fixed;
-	private int maxRaise;
+	private int fixed;//max ilośc podbic na 1 runde licytacji
+	private int maxRaise; //max wartośc o jaką można podbić
 	private int gameSize;
 	private int dealerButton;
 	private int initCredit;
@@ -79,11 +93,19 @@ public class Table  {
 	public SumUp SumUpState;
 	public ThirdBid ThirdBidState;
 	public Turn TurnState;
-	public NewDeal NewDealState;
+	public NewTurn NewTurnState;
 	public stopGame stopGameState;
 		
-		//ustawienie parametrów gry; (nie)wywołanie przygotowania gry
-		Table(int gameSize, int initCredit, Limit lim, int smallBlind, int bigBlind, int fixed,int maxRaise) {
+		//ustawienie parametrów gry; 
+		public Table(int gameSize, int initCredit, Limit lim, int smallBlind, int bigBlind, int fixed,int maxRaise) {
+		Players=new LinkedList<SystemPlayer>();
+		Credits=new LinkedList<Integer>();
+		Bets=new LinkedList<Integer>();
+		PlayersCards=new LinkedList<Cards>();
+		PlayersStatus=new LinkedList<PlayerStatus>();
+		TableDeck=new Deck();
+		CardsOnTable=new Cards();
+	
 			ip=new InitParams(gameSize,initCredit,lim,smallBlind,bigBlind,fixed,maxRaise);
 			gi=new gameInfo(ip);
 			initializeTableStates();
@@ -110,7 +132,8 @@ public class Table  {
 		}
 		//tworzy nową talię
 		public void newDeck() {
-			TableDeck.newDeck();
+			this.TableDeck.newDeck();
+			
 		}
 		//tworzy pusta talię oraz pustą liczbę graczy; gdy zgłoszona jest odpowiednia liczba graczy to uruchamia maszynę stanów
 		public void startGame() throws NoofPlayersException{
@@ -120,12 +143,16 @@ public class Table  {
 			}
 			
 			gameStarted=true;
-			newDeck();
+			//newDeck();
 			//Players = new LinkedList<Player>();
 						
 			//inicjalizuje stan początkowy
 			setState(startGameState);
-			//Auto();
+			while(true){
+				System.out.println("Table state: "+this.TState);
+				Auto();
+			}
+			
 			
 		}
 		
@@ -137,28 +164,16 @@ public class Table  {
 			if(countPlayers()==10){
 				throw new NoofPlayersException("Maximum no of players is 10, sorry!");
 			}
-			Players.add(g);
-			Active.add(true);
-			AllIn.add(false);
-			Folded.add(false);
+			Players.add(new SystemPlayer(g));
 		}
 
-		public Integer countPlayers() {
+		public int countPlayers() {
 			return Players.size();
 		}
 
-		public Integer countDeck() {
+		public int countDeck() {
 			return TableDeck.sizeof();
 		}
-
-		/*public Integer countAllPlayersCards() {
-			Integer count = 0;
-			for (Integer i = 0; i < countPlayers(); i++) {
-				count += Players.get(i).countCards();
-			}
-			return count;
-		}
-		*/
 
 		public void shuffleDeck() {
 			TableDeck.shuffle();
@@ -168,21 +183,48 @@ public class Table  {
 			this.Credits.set(index, value);
 		}
 
-		public void deal(Integer sizeofSet) throws sizeofSetException {
+		public void deal(Integer sizeofSet) throws sizeofSetException,RunOutOfPlayersException{
 			if (sizeofSet < 1) {
 				throw new sizeofSetException("Trzeba rozdać przynajmnniej jedną kartę!");
 			}
+			System.out.println("CNFP: "+countNonFoldedPlayers()+" "+countDeck());
 
-			if (sizeofSet > countDeck() / countPlayers()) {
+			if (sizeofSet > (countDeck() / countNonFoldedPlayers())) {
 				throw new sizeofSetException("Za mało kart w puli aby wykonać to rozdanie!");
 			}
 			shuffleDeck();
-			Integer cardstodeal = countPlayers() * sizeofSet;
-
-			for (Integer i = 0; i < cardstodeal; i++) {
-				givePlayerACard(i % countPlayers(),TableDeck.giveCard(0));
+				
+				Integer k=nextNonFoldedPlayer(0);
+			
+			for (Integer i = 0; i < countNonFoldedPlayers(); i++) {Players.get(i).takeCard(TableDeck.giveCard(0));
+						k=nextNonFoldedPlayer(k);
+					for(Integer j=0;j<sizeofSet;j++){
+				Players.get(k).takeCard(TableDeck.giveCard(0));
+					}
+				
+				//givePlayerACard(i % countNonFoldedPlayers(),TableDeck.giveCard(0));
 			}
 
+		}
+		
+		public Integer countNonFoldedPlayers(){
+			Integer nfp=0;
+			for(Integer i=0;i<countPlayers();i++){
+				if(Players.get(i).getPlayerStatus()!=PlayerStatus.folded){
+					nfp++;
+				}
+			}
+		return nfp;
+		}
+		
+		public Integer countActivePlayers(){
+			Integer ap=0;
+			for(Integer i=0;i<countPlayers();i++){
+				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&Players.get(i).getPlayerStatus()!=PlayerStatus.all_in){
+					ap++;
+				}
+			}
+		return ap;
 		}
 		
 		public Card takeCardFromDeck(){
@@ -191,15 +233,12 @@ public class Table  {
 		
 		public void givePlayerACard(Integer p, Card c){
 			PlayersCards.get(p).addCard(c);
+			this.getSystemPlayer(p).takeCard(c);
 		}
 
-		public Player getPlayer(Integer i) {
+		public SystemPlayer getSystemPlayer(Integer i) {
 			return Players.get(i);
 		}
-
-		/*
-		 * public List<Player> getPlayers() { return Players; }
-		 */
 
 		public Cards getDeck() {
 			return TableDeck;
@@ -230,17 +269,17 @@ public class Table  {
 		}
 		
 		public int getCredits(Integer p){
-			return this.Credits.get(p);
+			return this.getSystemPlayer(p).getPlayerCredits();
 		}
 		
 		public void setCredits(Integer p,Integer value){
-			 this.Credits.set(p,value);
+			 this.getSystemPlayer(p).setPlayerCredits(value);
 		}
 		
 		public Cards getPlayerCards(Integer p){
-			return this.PlayersCards.get(p);
+			return this.getSystemPlayer(p).getCards();
 		}
-		
+		/*
 		public List<Integer> getBets(){
 			return Bets;
 		}
@@ -273,14 +312,14 @@ public class Table  {
 			Folded.set(p, val);
 		}
 		
-		
+		*/
 		public void setPlayerCards(Integer p, Cards cards){
 			this.PlayersCards.set(p, cards);
 		}
 		
 		public void initializeCredits(){
 			for(Integer i=0;i<countPlayers();i++){
-				setCredit(i,initCredit);
+				Players.get(i).setPlayerCredits(initCredit);
 			}
 		}
 		
@@ -294,6 +333,26 @@ public class Table  {
 		
 		public void setBank(Integer b){
 			this.bank=b;
+		}
+		//czyści stół z kart oraz zabiera je graczom (nie czyści pozostałości po talii)
+		public void cleanCards(){
+			for(int i=0;i<countPlayers();i++){
+				this.getSystemPlayer(i).cleanCards();
+			}
+			this.CardsOnTable.removeAll();
+		}
+		
+		public void incrBank(Integer gain){
+			this.bank=this.bank+gain;
+		}
+		
+		public int evalBank(){
+			int value=0;
+			for(int i=0;i<countPlayers();i++){
+				value+=this.getSystemPlayer(i).getPlayerBet();
+			}
+			this.bank=value;
+			return value;
 		}
 		
 		public int getBank(){
@@ -324,15 +383,81 @@ public class Table  {
 			 SumUpState=new SumUp();
 			 ThirdBidState=new ThirdBid();
 			 TurnState=new Turn();
-			 NewDealState=new NewDeal();
+			 NewTurnState=new NewTurn();
 			 stopGameState=new stopGame();
 		}
 		
 		public void setState(TableState state ){
 			TState=state;
-			Auto();
+			//Auto();
 			
 		}
+		
+		public void ChangeActivePlayersStatusExcept(PlayerStatus status,Integer except){
+			
+			for(Integer i=except+1;i<countPlayers();i++){
+				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)){
+					Players.get(i).setPlayerStatus(status);
+
+				}
+			}
+			
+			for(Integer i=0;i<except;i++){
+				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)){
+					Players.get(i).setPlayerStatus(status);
+
+				}
+			}
+			
+			
+		}
+		
+		public Integer nextNonFoldedPlayer(Integer curr) throws RunOutOfPlayersException{
+			Integer next=-1;
+			for(Integer i=curr+1;i<countPlayers();i++){
+				if(Players.get(i).getPlayerStatus()!=PlayerStatus.folded){
+					next=i;
+					break;
+				}
+			}
+			if(next==-1){
+				for(Integer i=0;i<curr;i++){
+					if(Players.get(i).getPlayerStatus()!=PlayerStatus.folded){
+						next=i;
+						break;
+					}
+			}
+			}
+			    if(next==-1){
+			    	throw new RunOutOfPlayersException("W grze pozostało mniej niż 2 graczy.");
+			    }
+				return next;
+			
+		}
+		
+		public Integer nextActivePlayer(Integer curr) throws RunOutOfActivePlayersException{
+			Integer next=-1;
+			for(Integer i=curr+1;i<countPlayers();i++){
+				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)){
+					next=i;
+					break;
+				}
+			}
+			if(next==-1){
+				for(Integer i=0;i<curr;i++){
+					if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)){
+						next=i;
+						break;
+					}
+			}
+			}
+			    if(next==-1){
+			    	throw new RunOutOfActivePlayersException();
+			    }
+				return next;
+			
+		}
+		
 		
 		public TableState getState(){
 			return TState;
@@ -345,7 +470,7 @@ public class Table  {
 		public void end(){
 			//...
 		}
-		
+		/*
 		public Integer findHighestBet(){
 		Integer hb=this.Bets.get(0);
 		for(int i=1;i<Bets.size();i++){
@@ -356,12 +481,13 @@ public class Table  {
 		this.highestBet=hb;
 		return hb;
 		}
-		
+		*/
 		public void setHighestBet(Integer hb){
 			this.highestBet=hb;
 		}
 		
 		public Integer getHighestBet(){
+			this.setHighestBet(this.getMaxBet());
 			return this.highestBet;
 		}
 		
@@ -372,7 +498,7 @@ public class Table  {
 		public void setlastActivePlayer(Integer lap){
 		this.lastActivePlayer=lap;
 		}
-		
+	/*	
 		public Integer nextActivePlayer(Integer currplayer){
 			Integer next=-1;
 			for(int i=currplayer+1;i<this.countPlayers();i++){
@@ -383,31 +509,80 @@ public class Table  {
 			}
 			return next;
 		}
+		*/
 		
 		public Integer nextPlayer(Integer currplayer,Integer incr){
 			return (currplayer+incr) %countPlayers();
+		}
+		public void fill(){
+			
+			this.PlayersStatus.clear();
+			this.Credits.clear();
+			this.Bets.clear();
+			for(int i=0;i<this.countPlayers();i++){
+				this.PlayersStatus.add(this.getSystemPlayer(i).getPlayerStatus());
+				this.Credits.add(this.getSystemPlayer(i).getPlayerCredits());
+				this.Bets.add(this.getSystemPlayer(i).getPlayerBet());
+			}
 		}
 			
 			
 		
 		public gameInfo getgameInfo(Integer player){
-			gi.bank=this.bank;
+			fill();//fills bets,PlayersStatus,credits 
+			gi.bank=this.evalBank();
 			gi.TState=this.TState;
 			gi.CardsOnTable=this.CardsOnTable;
 			gi.Credits=this.Credits;
 			gi.PlayerCards=this.getPlayerCards(player);
-			gi.bank=this.bank;
+			gi.lastActivePlayer=this.getlastActivePlayer();
 			gi.gameStarted=this.gameStarted;
 			gi.dealerButton=this.dealerButton;
-			gi.noofPlayers=this.countPlayers();
+			gi.noofNonFoldedPlayers=this.countNonFoldedPlayers();
+			gi.noofNonFoldedNonAllInPlayers=this.countActivePlayers();
 			gi.Bets=this.Bets;
-			gi.highestBet=this.findHighestBet();
-			gi.AllIn=this.AllIn;
-			gi.Folded=this.Folded;
-			gi.Active=this.Active;
-			return this.gi;
+			gi.highestBet=this.getHighestBet();
+			gi.PlayersStatus=this.PlayersStatus;
+			gi.ThisPlayerCredits=this.getSystemPlayer(player).getPlayerCredits();
+			gi.ThisPlayerBets=this.getSystemPlayer(player).getPlayerBet();
+			gi.ThisPlayerStatus=this.getSystemPlayer(player).getPlayerStatus();
+			return gi;
 		}
 		
+		public int getMaxBet(){
+			int maxBet=0;
+			for(int i=0;i<countPlayers();i++){
+				if((this.getSystemPlayer(i).getPlayerStatus()==PlayerStatus.max_bet_bb)||(this.getSystemPlayer(i).getPlayerStatus()==PlayerStatus.max_bet_nbb)){
+					maxBet=this.getSystemPlayer(i).getPlayerBet();
+					break;
+				}
+
+			}
+			return maxBet;
+		}
 		
+		public Boolean BetsAreEqual(){
+			boolean betsequal=true;
+			for(int i=0;i<countPlayers();i++){
+				if(this.getSystemPlayer(i).getPlayerStatus()==PlayerStatus.under_max_bet){
+					betsequal=false;
+					break;
+				}
+			}			
+			return betsequal;
+		}
+		
+		public void cleanBets(){
+			for(int i=0;i<countPlayers();i++){
+				this.getSystemPlayer(i).setPlayerBet(0);
+			}
+		}
+		public void initializeNonFoldedPlayers(){
+			for(int i=0;i<countPlayers();i++){
+				if(this.getSystemPlayer(i).getPlayerStatus()!=PlayerStatus.folded){
+					this.getSystemPlayer(i).setPlayerStatus(PlayerStatus.init);
+				}
+		}
+		}
 		
 }

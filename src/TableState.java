@@ -1,9 +1,7 @@
 
-    public class TableState  {
+public class TableState {
 
-   
-
-	public void Auto(Table tab) {
-	};
-	
+	public void Auto(Table tab){
+		
+	}
 }
