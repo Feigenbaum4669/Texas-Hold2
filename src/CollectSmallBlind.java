@@ -7,7 +7,8 @@ public class CollectSmallBlind extends TableState {
 		nextState=tab.collectBigBlindState;
 		Integer sb=tab.getSmallBlind();
 		try{
-		Integer CurrPlayer=tab.nextNonFoldedPlayer(tab.getlastActivePlayer());
+		Integer CurrPlayer=tab.nextNonQuitPlayer(tab.getlastActivePlayer());
+		System.out.println("NON QUIT: "+CurrPlayer);
 		tab.setlastActivePlayer(CurrPlayer);
 			try{
 		tab.getSystemPlayer(CurrPlayer).incrPlayerBet(sb);
@@ -29,7 +30,7 @@ public class CollectSmallBlind extends TableState {
 			
 		}catch(RunOutOfPlayersException ex){
 	    	tab.getSystemPlayer(tab.getdealerButton()).notify(ex.getMessage());
-	    	nextState=tab.stopGameState;
+	    	nextState=tab.SumUpState;
 	    	}
 		//System.out.println("Small: "+tab.getlastActivePlayer());
 		System.out.println("Small: "+tab.getlastActivePlayer()+" BET: "+tab.getSystemPlayer(tab.getlastActivePlayer()).getPlayerBet()+" cards: "+tab.getSystemPlayer(tab.getlastActivePlayer()).countCards());

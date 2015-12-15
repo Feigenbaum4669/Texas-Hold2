@@ -143,6 +143,10 @@ public class FirstBid extends TableState {
 	public void Fold() {
 		tab.getSystemPlayer(CurrPlayer).setPlayerStatus(PlayerStatus.folded);	
 	}
+	
+	public void Quit() {
+		tab.getSystemPlayer(CurrPlayer).setPlayerStatus(PlayerStatus.quit);	
+	}
 
 	
 	public void AllIn() {
@@ -184,6 +188,9 @@ public class FirstBid extends TableState {
 		break;
 		case all_in:
 		AllIn();
+		break;
+		case quit:
+			Quit();
 		break;
 					}
 		

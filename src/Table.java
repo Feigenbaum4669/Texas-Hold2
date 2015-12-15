@@ -1,4 +1,5 @@
 import java.util.LinkedList;
+import java.util.List;
 
 public class Table  {
 	//głowne pola
@@ -135,17 +136,17 @@ public class Table  {
 			if (sizeofSet < 1) {
 				throw new sizeofSetException("Trzeba rozdać przynajmnniej jedną kartę!");
 			}
-			System.out.println("CNFP: "+countNonFoldedPlayers()+" "+countDeck());
+			System.out.println("CNFP: "+countNonQuitPlayers()+" "+countDeck());
 
-			if (sizeofSet > (countDeck() / countNonFoldedPlayers())) {
+			if (sizeofSet > (countDeck() / countNonQuitPlayers())) {
 				throw new sizeofSetException("Za mało kart w puli aby wykonać to rozdanie!");
 			}
 			shuffleDeck();
 				
-				Integer k=nextNonFoldedPlayer(0);
+				Integer k=nextNonQuitPlayer(0);
 			
-			for (Integer i = 0; i < countNonFoldedPlayers(); i++) {Players.get(i).takeCard(TableDeck.giveCard(0));
-						k=nextNonFoldedPlayer(k);
+			for (Integer i = 0; i < countNonQuitPlayers(); i++) {
+						k=nextNonQuitPlayer(k);
 					for(Integer j=0;j<sizeofSet;j++){
 				Players.get(k).takeCard(TableDeck.giveCard(0));
 					}
@@ -154,11 +155,21 @@ public class Table  {
 			}
 
 		}
+		public Integer countNonQuitPlayers(){
+			Integer nfp=0;
+			for(Integer i=0;i<countPlayers();i++){
+				if(Players.get(i).getPlayerStatus()!=PlayerStatus.quit){
+					nfp++;
+				}
+			}
+		return nfp;
+		}
+		
 		
 		public Integer countNonFoldedPlayers(){
 			Integer nfp=0;
 			for(Integer i=0;i<countPlayers();i++){
-				if(Players.get(i).getPlayerStatus()!=PlayerStatus.folded){
+				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.quit)){
 					nfp++;
 				}
 			}
@@ -168,7 +179,7 @@ public class Table  {
 		public Integer countActivePlayers(){
 			Integer ap=0;
 			for(Integer i=0;i<countPlayers();i++){
-				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&Players.get(i).getPlayerStatus()!=PlayerStatus.all_in){
+				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.quit)){
 					ap++;
 				}
 			}
@@ -178,11 +189,12 @@ public class Table  {
 		public Card takeCardFromDeck(){
 			return this.TableDeck.giveCard(0);
 		}
-		
+		/*
 		public void givePlayerACard(Integer p, Card c){
 			PlayersCards.get(p).addCard(c);
 			this.getSystemPlayer(p).takeCard(c);
 		}
+		*/
 
 		public SystemPlayer getSystemPlayer(Integer i) {
 			return Players.get(i);
@@ -271,6 +283,24 @@ public class Table  {
 			}
 		}
 		
+		public Card[] getTabofTableCards() {
+			Card[] tableCards=new Card[5];
+			int size=this.CardsOnTable.sizeof();
+			for(int i=0;i<size;i++){
+				tableCards[i]=this.CardsOnTable.getCard(i);
+			};
+			return tableCards;
+		}
+		
+		public Card[] getTabofPlayerCards(int p) {
+			Card[] playerCards=new Card[5];
+			int size=this.getSystemPlayer(p).getCards().sizeof();
+			for(int i=0;i<size;i++){
+				playerCards[i]=this.getSystemPlayer(p).getCards().getCard(i);
+			};
+			return playerCards;
+		}
+		
 		public void setdealerButton(Integer p){
 			dealerButton=p;
 		}
@@ -350,14 +380,14 @@ public class Table  {
 		public void ChangeActivePlayersStatusExcept(PlayerStatus status,Integer except){
 			
 			for(Integer i=except+1;i<countPlayers();i++){
-				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)){
+				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.quit)){
 					Players.get(i).setPlayerStatus(status);
 
 				}
 			}
 			
 			for(Integer i=0;i<except;i++){
-				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)){
+				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.quit)){
 					Players.get(i).setPlayerStatus(status);
 
 				}
@@ -369,14 +399,37 @@ public class Table  {
 		public Integer nextNonFoldedPlayer(Integer curr) throws RunOutOfPlayersException{
 			Integer next=-1;
 			for(Integer i=curr+1;i<countPlayers();i++){
-				if(Players.get(i).getPlayerStatus()!=PlayerStatus.folded){
+				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.quit)){
 					next=i;
 					break;
 				}
 			}
 			if(next==-1){
 				for(Integer i=0;i<curr;i++){
-					if(Players.get(i).getPlayerStatus()!=PlayerStatus.folded){
+					if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.quit)){
+						next=i;
+						break;
+					}
+			}
+			}
+			    if(next==-1){
+			    	throw new RunOutOfPlayersException("W turze pozostało mniej niż 2 graczy.");
+			    }
+				return next;
+			
+		}
+		
+		public Integer nextNonQuitPlayer(Integer curr) throws RunOutOfPlayersException{
+			Integer next=-1;
+			for(Integer i=curr+1;i<countPlayers();i++){
+				if(Players.get(i).getPlayerStatus()!=PlayerStatus.quit){
+					next=i;
+					break;
+				}
+			}
+			if(next==-1){
+				for(Integer i=0;i<curr;i++){
+					if(Players.get(i).getPlayerStatus()!=PlayerStatus.quit){
 						next=i;
 						break;
 					}
@@ -392,21 +445,21 @@ public class Table  {
 		public Integer nextActivePlayer(Integer curr) throws RunOutOfActivePlayersException{
 			Integer next=-1;
 			for(Integer i=curr+1;i<countPlayers();i++){
-				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)){
+				if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.quit)){
 					next=i;
 					break;
 				}
 			}
 			if(next==-1){
 				for(Integer i=0;i<curr;i++){
-					if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)){
+					if((Players.get(i).getPlayerStatus()!=PlayerStatus.folded)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.all_in)&&(Players.get(i).getPlayerStatus()!=PlayerStatus.quit)){
 						next=i;
 						break;
 					}
 			}
 			}
 			    if(next==-1){
-			    	throw new RunOutOfActivePlayersException();
+			    	throw new RunOutOfActivePlayersException("W licytacji pozostało mniej niż 2 graczy.");
 			    }
 				return next;
 			
@@ -465,9 +518,6 @@ public class Table  {
 		}
 		*/
 		
-		public Integer nextPlayer(Integer currplayer,Integer incr){
-			return (currplayer+incr) %countPlayers();
-		}
 		public void fill(){
 			
 			this.PlayersStatus.clear();
@@ -541,7 +591,9 @@ public class Table  {
 		}*/
 		public void initializePlayers(){
 			for(int i=0;i<countPlayers();i++){
+				if(this.getSystemPlayer(i).getPlayerStatus()!=PlayerStatus.quit){
 					this.getSystemPlayer(i).setPlayerStatus(PlayerStatus.init);	
+				}
 		}
 		}
 		

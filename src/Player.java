@@ -86,6 +86,9 @@ public class Player {
 		case 5:
 		va.action=Action.all_in;
 		break;
+		case 6:
+			va.action=Action.quit;	
+		break;
 					}	
 		va.value=j;
 		return va;
