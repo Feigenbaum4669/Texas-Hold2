@@ -1,3 +1,4 @@
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,6 +85,7 @@ public class Table  {
 			this.TableDeck.newDeck();
 			
 		}
+		
 		//tworzy pusta talię oraz pustą liczbę graczy; gdy zgłoszona jest odpowiednia liczba graczy to uruchamia maszynę stanów
 		public void startGame() throws NoofPlayersException{
 			
@@ -272,10 +274,11 @@ public class Table  {
 			Folded.set(p, val);
 		}
 		
-		*/
+		
 		public void setPlayerCards(Integer p, Cards cards){
 			this.PlayersCards.set(p, cards);
 		}
+		*/
 		
 		public void initializeCredits(){
 			for(Integer i=0;i<countPlayers();i++){
@@ -285,20 +288,25 @@ public class Table  {
 		
 		public Card[] getTabofTableCards() {
 			Card[] tableCards=new Card[5];
-			int size=this.CardsOnTable.sizeof();
-			for(int i=0;i<size;i++){
+			//int size=this.CardsOnTable.sizeof();
+			for(int i=0;i<5;i++){
 				tableCards[i]=this.CardsOnTable.getCard(i);
-			};
+			}
 			return tableCards;
 		}
 		
 		public Card[] getTabofPlayerCards(int p) {
-			Card[] playerCards=new Card[5];
-			int size=this.getSystemPlayer(p).getCards().sizeof();
-			for(int i=0;i<size;i++){
+			Card[] playerCards=new Card[2];
+			//int size=this.getSystemPlayer(p).getCards().sizeof();
+			for(int i=0;i<2;i++){
 				playerCards[i]=this.getSystemPlayer(p).getCards().getCard(i);
-			};
+			}
 			return playerCards;
+		}
+		
+		public LinkedList <Integer>getPlayersBets(){
+			this.fill();
+			return this.Bets;
 		}
 		
 		public void setdealerButton(Integer p){
@@ -323,7 +331,7 @@ public class Table  {
 		public void incrBank(Integer gain){
 			this.bank=this.bank+gain;
 		}
-		/*
+		
 		public int evalBank(){
 			int value=0;
 			for(int i=0;i<countPlayers();i++){
@@ -332,7 +340,7 @@ public class Table  {
 			this.bank=value;
 			return value;
 		}
-		*/
+		
 		
 		public int getBank(){
 			int value=0;
@@ -530,6 +538,9 @@ public class Table  {
 			}
 		}
 			
+		
+		
+		
 			
 		
 		public gameInfo getgameInfo(Integer player){
