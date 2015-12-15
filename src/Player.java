@@ -54,15 +54,19 @@ public class Player {
 		return PlayerCards.sizeof();
 	}
 	
-	public VAction makeAction(gameInfo gi){
+	public void setGameInfo(gameInfo gi){
 		this.PlayerCards=gi.PlayerCards;
 		this.status=gi.ThisPlayerStatus;
 		this.Credits=gi.ThisPlayerCredits;
 		this.Bet=gi.ThisPlayerBets;
 		this.hBet=gi.highestBet;
 		this.bank=gi.bank;
-		VAction va= new VAction();
-			
+	}
+	
+	public VAction makeAction(gameInfo gi){
+		
+		setGameInfo(gi);
+		VAction va= new VAction();	
 		System.out.println("Make decision "+this.name);
 		System.out.println("INFO: status: "+this.status+" highestBet: "+hBet+" Bank: "+this.bank+" credits: "+this.Credits+" bet: "+this.Bet);
 		System.out.println("command:");

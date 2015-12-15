@@ -101,11 +101,26 @@ public class Table  {
 			setState(startGameState);
 			while(exitSignal==false){
 				System.out.println("Table state: "+this.TState);
+				passGameInfo();
 				Auto();
 			}
 			
 			
 		}
+		
+		public void passGameInfo(){
+			try{
+			int p=this.nextNonQuitPlayer(0);
+			for(int i=0;i<this.countNonQuitPlayers();i++){
+				this.getgameInfo(p);
+				this.getSystemPlayer(p).passGameInfo(gi);
+				p=this.nextNonQuitPlayer(p);
+			}
+			}catch(RunOutOfPlayersException ex){
+				//...
+			}
+					}
+		
 		
 
 		public void addPlayer(Player g) throws gameHasStartedException, NoofPlayersException  {

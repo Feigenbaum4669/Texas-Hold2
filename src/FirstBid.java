@@ -4,12 +4,12 @@ public class FirstBid extends TableState {
 	//private TableState nextState;
 	private Table tab;
 	private Integer CurrPlayer;
-	int raiseCounter=0;
+	private int raiseCounter=0;
 	
-	private void setTab(Table tab){
+	public void setTab(Table tab){
 		this.tab=tab;
 	}
-	private void setPlayer(Integer CurrPlayer){
+	public void setPlayer(Integer CurrPlayer){
 		this.CurrPlayer=CurrPlayer;
 	}
 	

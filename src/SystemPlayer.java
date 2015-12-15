@@ -83,6 +83,10 @@ public void notify(String msg){
 	this.extPlayer.notify(msg);
 }
 
+public void passGameInfo(gameInfo gi){
+	this.extPlayer.setGameInfo(gi);
+}
+
 public VAction makeAction(gameInfo gi){
 	return this.extPlayer.makeAction(gi);
 }
