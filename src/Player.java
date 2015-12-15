@@ -6,13 +6,14 @@ import java.io.InputStreamReader;
 
 
 public class Player {
-	private Cards PlayerCards;
-	private String name;
-	private PlayerStatus status;
-	private Integer Credits;
-	private Integer Bet;
-	private Integer hBet;
-	private Integer bank;
+	protected Cards PlayerCards;
+	protected  String name;
+	protected  PlayerStatus status;
+	protected  Integer Credits;
+	protected  Integer Bet;
+	protected  Integer hBet;
+	protected  Integer bank;
+	protected  int i;
 	
 	public static String getInput(String prompt) {
 	    BufferedReader in = new BufferedReader(
@@ -61,12 +62,14 @@ public class Player {
 		this.hBet=gi.highestBet;
 		this.bank=gi.bank;
 		VAction va= new VAction();
+			
 		System.out.println("Make decision "+this.name);
 		System.out.println("INFO: status: "+this.status+" highestBet: "+hBet+" Bank: "+this.bank+" credits: "+this.Credits+" bet: "+this.Bet);
 		System.out.println("command:");
 		int i=Integer.parseInt(getInput(""));
 		System.out.println("value:");
 		int j=Integer.parseInt(getInput(""));
+		
 		switch(i){
 		case 0:
 		va.action=Action.check;
@@ -95,5 +98,7 @@ public class Player {
 		}
 	public void notify(String msg){
 		System.out.println("Notka: "+msg+"\n");
+		
 	}
+	
 }

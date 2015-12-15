@@ -6,13 +6,12 @@ class IntsComp implements Comparator<Integer>{
 	 
     @Override
     public int compare(Integer e1, Integer e2) {
-        if(e1 < e2){
+        if(e1 > e2){
             return 1;
-        } else if(e1==e2) {
-            return 0;
-        }else
-        return -1;
+        } else {
+            return -1;
     }
+}
 }
 
 
@@ -35,9 +34,12 @@ public class SumUp extends TableState {
 		System.out.println("player: "+i+"status: "+tab.getSystemPlayer(i).getPlayerStatus());
 		}
 		
-		if(tab.countNonQuitPlayers()>1){
-			
-		nextState=tab.NewTurnState;
+		if(tab.countNonQuitPlayers()>0){
+			nextState=tab.NewTurnState;
+			if(tab.countNonQuitPlayers()==1){
+				nextState=tab.stopGameState;
+			}
+		
 		winners=new LinkedList<Boolean>();
 		//initWinnersFalse(tab);
 		cardRanks=new LinkedList<Integer>();
@@ -50,33 +52,58 @@ public class SumUp extends TableState {
 		for(int i=0;i<tab.countPlayers();i++){
 		status=tab.getSystemPlayer(i).getPlayerStatus();
 		if((status==PlayerStatus.folded)||(status==PlayerStatus.quit)){
-			cardRanks.add(-1);
+			cardRanks.add(80000);
 		}else{
 		evaluator.initWithTableCards(tab.getTabofTableCards()).initWithHoleCards(tab.getTabofPlayerCards(i));
 		cardRanks.add(evaluator.eval());
 		}
 		}
+		//wysw ranki
+		for(int i=0;i<cardRanks.size();i++){
+			System.out.println(cardRanks.get(i));
+		}
+		
 		//tworzy pule boczne
 	    IntsComp comp=new IntsComp();
 	    LinkedList <Integer> SortedBets=tab.getPlayersBets();
 	    Collections.sort(SortedBets,comp);
 	    Integer no=SortedBets.size();
 	    Pots.add(SortedBets.get(0)*no);
-	    for(int i=1;i<SortedBets.size()-1;i++){
-	    	int diff=SortedBets.get(i+1)-SortedBets.get(i);
+	    PotsPerGamer.add(SortedBets.get(0));
+	    for(int i=1;i<SortedBets.size();i++){
+	    	int diff=SortedBets.get(i)-SortedBets.get(i-1);
+	    	//System.out.println("Diff: "+diff);
 	    	if(diff>0){
+	    		//System.out.println("Diff is greter. Add: "+diff*(no-i));
 	    		Pots.add(diff*(no-i));
 	    		PotsPerGamer.add(diff);
 	    	}
 	    }
+	    
+	    for(int i=0;i<tab.countPlayers();i++){
+  			System.out.println("BETS:"+tab.getSystemPlayer(i).getPlayerBet());
+  		}
+	    
+	  //wysw pule
+	  		for(int i=0;i<Pots.size();i++){
+	  			System.out.println("POTS:"+Pots.get(i));
+	  		}
+	  		for(int i=0;i<PotsPerGamer.size();i++){
+	  			System.out.println("PGamer:"+PotsPerGamer.get(i));
+	  		}
+	  		
+	  		
 	  //podziel bank między graczy (update kredytów)
 	    for(int i=0;i<Pots.size();i++){
 	    	prize=0;
 	    	findWinners(i,tab);
+	    	if(winnersCount!=0){
 	    	prize=Pots.get(i)/winnersCount;
+	    	}
 	    	for(int j=0;j<winners.size();j++){
 	    		if(winners.get(j)==true){
 	    			tab.getSystemPlayer(j).incrPlayerCredits(prize);
+	    			System.out.println("Winner: "+j+ "Pot: "+i+" +PRIZE: "+prize);
 	    		}
 	    	}
 	    	
@@ -145,7 +172,7 @@ public class SumUp extends TableState {
 	private void findWinners(Integer pot,Table tab){
 		winnersCount=0;
 		initWinnersFalse(tab);
-		int maxRank=0;
+		int maxRank=79000;
 		int plRank;
 		int plBet;
 		for(int i=0;i<tab.countPlayers();i++){
@@ -153,7 +180,7 @@ public class SumUp extends TableState {
 			plRank=cardRanks.get(i);
 			
 				if(plBet>=sumByPotsPerGamer(pot)){
-					if(plRank>maxRank){
+					if(plRank<maxRank){
 						maxRank=plRank;
 					}
 				}

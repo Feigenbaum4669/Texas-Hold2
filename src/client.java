@@ -10,10 +10,11 @@ public class client {
 		int fixed=2;
 		int maxRaise=20;
 		
-		Player p0=new Player("p0");
-		Player p1=new Player("p1");
-		Player p2=new Player("p2");
-		Player p3=new Player("p3");
+		Player p0=new Bot("bot0");
+		Player p1=new Bot("bot1");
+		Player p2=new Bot("bot2");
+		Player p3=new Bot("bot3");
+		
 		
 		Table tab=new Table(gameSize,initCredit,lim,smallBlind,bigBlind,fixed,maxRaise);
 		try{
