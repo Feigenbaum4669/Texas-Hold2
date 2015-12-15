@@ -21,10 +21,10 @@ public class TestTable {
 	public int fixed=2;
 	public int maxRaise=20;
 	
-	Player p0=new Player("p0");
-	Player p1=new Player("p1");
-	Player p2=new Player("p2");
-	Player p3=new Player("p3");
+	Player p0=new ServerSidePlayer("p0");
+	Player p1=new ServerSidePlayer("p1");
+	Player p2=new ServerSidePlayer("p2");
+	Player p3=new ServerSidePlayer("p3");
 	
 	@Before
 	public void setUp() throws Exception {
