@@ -23,12 +23,12 @@ public class ServerSidePlayer extends Player {
 	
 	Console console=System.console();
 	
-	public VAction makeAction(gameInfo gi){
+	public VAction makeAction(GameInfo gi){
 		setGameInfo(gi);
 		
 		VAction va= new VAction();
 		System.out.println("Make decision "+this.name);
-		System.out.println("INFO: status: "+this.status+" highestBet: "+hBet+" Bank: "+this.bank+" credits: "+this.Credits+" bet: "+this.Bet);
+		System.out.println("INFO: status: "+this.status+" highestBet: "+hBet+" Bank: "+this.bank+" credits: "+this.Credits+" bet: "+this.bet);
 		System.out.println("command:");
 		int i=Integer.parseInt(getInput(""));
 		System.out.println("value:");

@@ -1,6 +1,6 @@
 public class SystemPlayer {
 	private PlayerStatus status;
-	// private LinkedList<Player> Players;
+	private String name;
 	private Integer Credits;
 	private Player extPlayer;
 	private Integer Bet;
@@ -8,11 +8,17 @@ public class SystemPlayer {
 
 	public SystemPlayer(Player extPlayer) {
 		this.extPlayer = extPlayer;
+		name = extPlayer.name;
 		status = PlayerStatus.init;
 		PlayersCards = new Cards();
 		Bet = 0;
 		Credits = 0;
 	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
 	public void setPlayerStatus(PlayerStatus status) {
 		this.status = status;
 	}
@@ -69,13 +75,10 @@ public class SystemPlayer {
 		return this.PlayersCards;
 	}
 
-public void passGameInfo(gameInfo gi){
-	this.extPlayer.setGameInfo(gi);
-}
+	public void passGameInfo(GameInfo gi) {
+		this.extPlayer.setGameInfo(gi);
+	}
 
-//public VAction makeAction(gameInfo gi){
-//	return this.extPlayer.makeAction(gi);
-//}
 	public void cleanCards() {
 		this.PlayersCards.removeAll();
 	}
@@ -88,7 +91,7 @@ public void passGameInfo(gameInfo gi){
 		this.extPlayer.notify(msg);
 	}
 
-	public VAction makeAction(gameInfo gi) {
+	public VAction makeAction(GameInfo gi) {
 		return this.extPlayer.makeAction(gi);
 	}
 

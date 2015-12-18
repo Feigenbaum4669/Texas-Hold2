@@ -33,7 +33,7 @@ public class GameBehaviour {
 
 	// Sprawdzenie, czy żetony nie giną podczas gry.
 	@Test
-	public void testCoinsDoNotDisappear() throws NoofPlayersException, gameHasStartedException {
+	public void testCoinsDoNotDisappear() throws NumberOfPlayersException, GameHasStartedException {
 		tab.addPlayer(p0);
 		tab.addPlayer(p1);
 		tab.addPlayer(p2);
@@ -54,7 +54,7 @@ public class GameBehaviour {
 
 	// FirstBid
 	@Test
-	public void testFirstBid() throws NoofPlayersException, gameHasStartedException, NotEnoughCreditsException {
+	public void testFirstBid() throws NumberOfPlayersException, GameHasStartedException, NotEnoughCreditsException {
 
 		VAction VAct = new VAction();
 		VAct.value = 10;
@@ -149,7 +149,7 @@ public class GameBehaviour {
 	
 	// SecondBid
 		@Test
-		public void testSecondBid() throws NoofPlayersException, gameHasStartedException, NotEnoughCreditsException {
+		public void testSecondBid() throws NumberOfPlayersException, GameHasStartedException, NotEnoughCreditsException {
 
 			VAction VAct = new VAction();
 			VAct.value = 10;
@@ -238,7 +238,7 @@ public class GameBehaviour {
 		}
 		//ThirdBid
 		@Test
-		public void testThirdBid() throws NoofPlayersException, gameHasStartedException, NotEnoughCreditsException {
+		public void testThirdBid() throws NumberOfPlayersException, GameHasStartedException, NotEnoughCreditsException {
 
 			VAction VAct = new VAction();
 			VAct.value = 10;
@@ -327,7 +327,7 @@ public class GameBehaviour {
 		
 		// LastBid
 		@Test
-		public void testLastBid() throws NoofPlayersException, gameHasStartedException, NotEnoughCreditsException {
+		public void testLastBid() throws NumberOfPlayersException, GameHasStartedException, NotEnoughCreditsException {
 
 			VAction VAct = new VAction();
 			VAct.value = 10;

@@ -45,7 +45,7 @@ public class TestTable {
 	
 	// Sprawdzenie, dodawania graczy 
 	@Test
-	public void testaddPlayers() throws gameHasStartedException, NoofPlayersException {
+	public void testaddPlayers() throws GameHasStartedException, NumberOfPlayersException {
 		tab.addPlayer(p0);
 		tab.addPlayer(p1);
 		tab.addPlayer(p2);
@@ -54,8 +54,8 @@ public class TestTable {
 	}
 	
 	// Sprawdzenie limitu na liczbę graczy.
-	@Test(expected = NoofPlayersException.class)
-	public void testMaxPlayers() throws NoofPlayersException, gameHasStartedException {
+	@Test(expected = NumberOfPlayersException.class)
+	public void testMaxPlayers() throws NumberOfPlayersException, GameHasStartedException {
 		tab.addPlayer(p0);
 		tab.addPlayer(p1);
 		tab.addPlayer(p2);
@@ -70,8 +70,8 @@ public class TestTable {
 	}
 	
 	// Sprawdzenie, czy gra uruchomi się ze zbyt mała liczba graczy.
-		@Test(expected = NoofPlayersException.class)
-		public void testgameStartsWithFewPlayers() throws NoofPlayersException, gameHasStartedException {
+		@Test(expected = NumberOfPlayersException.class)
+		public void testgameStartsWithFewPlayers() throws NumberOfPlayersException, GameHasStartedException {
 			tab.addPlayer(p0);
 			tab.startGame();
 		}
@@ -85,7 +85,7 @@ public class TestTable {
 		
 		// Sprawdzenie czy po rozdaniu ubywa odpowiednio kart ze stołu.
 		@Test
-		public void testcardsonTableafterdeal() throws sizeofSetException, RunOutOfPlayersException, gameHasStartedException, NoofPlayersException {
+		public void testcardsonTableafterdeal() throws sizeofSetException, RunOutOfPlayersException, GameHasStartedException, NumberOfPlayersException {
 			tab.addPlayer(p0);
 			tab.addPlayer(p1);
 			tab.addPlayer(p2);
@@ -98,7 +98,7 @@ public class TestTable {
 		
 		// Sprawdzenie, czy gracze nie mają żadnych kart przed rozdaniem.
 		@Test
-		public void testPlayersscheat() throws sizeofSetException, gameHasStartedException, NoofPlayersException {
+		public void testPlayersscheat() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException {
 			int sum=0;
 			tab.addPlayer(p0);
 			tab.addPlayer(p1);
@@ -113,7 +113,7 @@ public class TestTable {
 		
 		// Sprawdzenie, czy suma rozdanych kart graczy jest właściwa.
 		@Test
-		public void testcardsofAllPlayerss() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException {
+		public void testcardsofAllPlayerss() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException {
 			int sum=0;
 			tab.addPlayer(p1);
 			tab.addPlayer(p2);
@@ -129,7 +129,7 @@ public class TestTable {
 		
 		// Sprawdzenie, czy karty nie giną.
 		@Test
-		public void teststack() throws sizeofSetException, RunOutOfPlayersException, gameHasStartedException, NoofPlayersException {
+		public void teststack() throws sizeofSetException, RunOutOfPlayersException, GameHasStartedException, NumberOfPlayersException {
 			int sum=0;
 			tab.addPlayer(p1);
 			tab.addPlayer(p2);
@@ -150,7 +150,7 @@ public class TestTable {
 		
 		// Sprawdzenie czy poszczególni gracze faktycznie otrzymują karty.
 		@Test
-		public void testcardsofPlayerss() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException {
+		public void testcardsofPlayerss() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException {
 			tab.addPlayer(p1);
 			tab.addPlayer(p2);
 			tab.addPlayer(p3);
@@ -184,7 +184,7 @@ public class TestTable {
 		
 		// Sprawdzenie czy po rozpoczeciu nowej gry talia ma odpowiedni rozmiar.
 		@Test
-		public void testsecondnewGame() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException {
+		public void testsecondnewGame() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException {
 			tab.addPlayer(p1);
 			tab.addPlayer(p2);
 			tab.addPlayer(p3);
@@ -198,7 +198,7 @@ public class TestTable {
 		
 		//Sprawdzenie wykładania kart na stół
 		@Test
-		public void testputCardOnTable() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException {
+		public void testputCardOnTable() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException {
 			tab.newDeck();
 			tab.addCardOnTable(tab.takeCardFromDeck());
 			tab.addCardOnTable(tab.takeCardFromDeck());
@@ -209,7 +209,7 @@ public class TestTable {
 		
 		// Sprawdzenie czy karty nie są gubione po tasowaniu i rozdaniu.
 		@Test
-		public void teststackOK() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException {
+		public void teststackOK() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException {
 			tab.addPlayer(p1);
 			tab.addPlayer(p2);
 			tab.addPlayer(p3);
@@ -242,7 +242,7 @@ public class TestTable {
 		
 		// Sprawdzenie szukania następnego aktywnego gracza
 				@Test
-				public void nextActivePlayerInd() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void nextActivePlayerInd() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -257,7 +257,7 @@ public class TestTable {
 				
 				// Sprawdzenie szukania następnego niesfolodwanego gracza
 				@Test
-				public void nextNonFoldedPlayerInd() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void nextNonFoldedPlayerInd() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -272,7 +272,7 @@ public class TestTable {
 				
 				// Sprawdzenie szukania następnego niesquitowanego gracza
 				@Test
-				public void nextNonQuitPlayerInd() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void nextNonQuitPlayerInd() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -287,7 +287,7 @@ public class TestTable {
 				
 				// Sprawdzenie zliczania aktywnych gracza
 				@Test
-				public void nextActivePlayerCount() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void nextActivePlayerCount() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -302,7 +302,7 @@ public class TestTable {
 				
 				// Sprawdzenie zliczania niesfolodwanhych graczy
 				@Test
-				public void nextNonFoldedPlayerCount() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void nextNonFoldedPlayerCount() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -317,7 +317,7 @@ public class TestTable {
 				
 				// Sprawdzenie zliczania niesquitowanych graczy
 				@Test
-				public void nextNonQuitPlayerCount() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void nextNonQuitPlayerCount() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -332,7 +332,7 @@ public class TestTable {
 				
 				// Sprawdzenie inicjalizacji kredytów
 				@Test
-				public void initializeCredits() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void initializeCredits() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -344,7 +344,7 @@ public class TestTable {
 				
 				//spr wyrzucania wyjątku RunOutOfPlayers dla nextnonquitplayer
 				@Test(expected = RunOutOfPlayersException.class)
-				public void runofnonquit() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void runofnonquit() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -357,7 +357,7 @@ public class TestTable {
 				
 				//spr wyrzucania wyjątku RunOutOfActivePlayers dla nextactiveplayer
 				@Test(expected = RunOutOfActivePlayersException.class)
-				public void runofanctive() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void runofanctive() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -370,7 +370,7 @@ public class TestTable {
 				
 				//spr wyrzucania wyjątku RunOutOfPlayers dla nextnonfoldedplayer
 				@Test(expected = RunOutOfPlayersException.class)
-				public void runofnonfolded() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void runofnonfolded() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -384,7 +384,7 @@ public class TestTable {
 				//test dla changeactiveplayersttausexcept
 				//spr wyrzucania wyjątku RunOutOfPlayers dla nextnonfoldedplayer
 				@Test
-				public void activeplayersstatusexcept() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void activeplayersstatusexcept() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -408,7 +408,7 @@ public class TestTable {
 				
 				//maxBetTest
 				@Test
-				public void maxBetCheck() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void maxBetCheck() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p3);
@@ -424,7 +424,7 @@ public class TestTable {
 				}
 				//fill
 				@Test
-				public void fillTest() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void fillTest() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.getSystemPlayer(0).setPlayerStatus(PlayerStatus.max_bet_bb);
@@ -434,16 +434,16 @@ public class TestTable {
 					tab.getSystemPlayer(0).setPlayerBet(10);
 					tab.getSystemPlayer(1).setPlayerBet(20);				
 					tab.fill();
-					assertEquals(tab.getgameInfo(0).ThisPlayerStatus,PlayerStatus.max_bet_bb);
-					assertEquals(tab.getgameInfo(1).ThisPlayerStatus,PlayerStatus.under_max_bet);
-					assertEquals(tab.getgameInfo(0).ThisPlayerCredits,100);
-					assertEquals(tab.getgameInfo(1).ThisPlayerCredits,200);
-					assertEquals(tab.getgameInfo(0).ThisPlayerBets,10);
-					assertEquals(tab.getgameInfo(1).ThisPlayerBets,20);	
+					assertEquals(tab.getgameInfo(0).playerStatus,PlayerStatus.max_bet_bb);
+					assertEquals(tab.getgameInfo(1).playerStatus,PlayerStatus.under_max_bet);
+					assertEquals(tab.getgameInfo(0).playerCredits,100);
+					assertEquals(tab.getgameInfo(1).playerCredits,200);
+					assertEquals(tab.getgameInfo(0).playerBets,10);
+					assertEquals(tab.getgameInfo(1).playerBets,20);	
 				}
 				
 				@Test
-				public void initializePlayers() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void initializePlayers() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p2);
@@ -459,16 +459,16 @@ public class TestTable {
 					tab.getSystemPlayer(5).setPlayerStatus(PlayerStatus.folded);
 					tab.getSystemPlayer(6).setPlayerStatus(PlayerStatus.quit);
 					tab.initializePlayers();
-					assertEquals(tab.getgameInfo(0).ThisPlayerStatus,PlayerStatus.init);
-					assertEquals(tab.getgameInfo(1).ThisPlayerStatus,PlayerStatus.quit);
-					assertEquals(tab.getgameInfo(2).ThisPlayerStatus,PlayerStatus.init);
-					assertEquals(tab.getgameInfo(3).ThisPlayerStatus,PlayerStatus.init);
-					assertEquals(tab.getgameInfo(4).ThisPlayerStatus,PlayerStatus.init);
-					assertEquals(tab.getgameInfo(5).ThisPlayerStatus,PlayerStatus.init);
-					assertEquals(tab.getgameInfo(6).ThisPlayerStatus,PlayerStatus.quit);
+					assertEquals(tab.getgameInfo(0).playerStatus,PlayerStatus.init);
+					assertEquals(tab.getgameInfo(1).playerStatus,PlayerStatus.quit);
+					assertEquals(tab.getgameInfo(2).playerStatus,PlayerStatus.init);
+					assertEquals(tab.getgameInfo(3).playerStatus,PlayerStatus.init);
+					assertEquals(tab.getgameInfo(4).playerStatus,PlayerStatus.init);
+					assertEquals(tab.getgameInfo(5).playerStatus,PlayerStatus.init);
+					assertEquals(tab.getgameInfo(6).playerStatus,PlayerStatus.quit);
 				}
 				@Test
-				public void BetsAreEqualPlayers() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void BetsAreEqualPlayers() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 					tab.addPlayer(p1);
 					tab.addPlayer(p2);
 					tab.addPlayer(p2);
@@ -484,7 +484,7 @@ public class TestTable {
 				}
 				
 				@Test
-				public void getTabofPlayersCards() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void getTabofPlayersCards() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 
 					tab.addPlayer(p1);
 					tab.addPlayer(p1);
@@ -499,7 +499,7 @@ public class TestTable {
 				}
 				
 				@Test
-				public void getTabofTableCards() throws sizeofSetException, gameHasStartedException, NoofPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
+				public void getTabofTableCards() throws sizeofSetException, GameHasStartedException, NumberOfPlayersException, RunOutOfPlayersException, RunOutOfActivePlayersException {
 
 					tab.addPlayer(p1);
 					tab.addPlayer(p1);

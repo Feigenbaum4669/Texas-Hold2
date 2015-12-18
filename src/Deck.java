@@ -1,13 +1,11 @@
-
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-
 public class Deck extends Cards {
 
 	private List<Card> CardStack;
-	
+
 	Deck() {
 		CardStack = new LinkedList<Card>();
 	}
@@ -27,9 +25,9 @@ public class Deck extends Cards {
 	public void addCard(Card c) {
 		CardStack.add(c);
 	}
-	
+
 	public void setCards(List<Card> cards) {
-		CardStack=cards;
+		CardStack = cards;
 	}
 
 	public void removeCard(Integer i) {
@@ -60,4 +58,3 @@ public class Deck extends Cards {
 	}
 
 }
-

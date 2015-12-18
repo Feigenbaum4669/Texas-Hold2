@@ -55,7 +55,7 @@ public class LastBid extends TableState {
 	public void Check() {
 		PlayerStatus status = tab.getSystemPlayer(CurrPlayer).getPlayerStatus();
 		if (status == PlayerStatus.under_max_bet) {
-			tab.getSystemPlayer(CurrPlayer).notify("Nie można podtrzymać stawki - została przebita.");
+			tab.getSystemPlayer(CurrPlayer).notify("err:Nie można podtrzymać stawki - została przebita.");
 			Decode(getAction());
 		} else {
 			// player zcheckował//
@@ -74,7 +74,7 @@ public class LastBid extends TableState {
 	public void Bet(Integer val) {
 		int maxBet = tab.getMaxBet();
 		if (initialbet < maxBet) {
-			tab.getSystemPlayer(CurrPlayer).notify("Pierwszy zakład już został postawiony!");
+			tab.getSystemPlayer(CurrPlayer).notify("err:Pierwszy zakład już został postawiony!");
 			Decode(getAction());
 		} else {
 			if (val > 0) {
@@ -87,7 +87,7 @@ public class LastBid extends TableState {
 
 				}
 			} else {
-				tab.getSystemPlayer(CurrPlayer).notify("Pierwszy zakład musi być >0!");
+				tab.getSystemPlayer(CurrPlayer).notify("err:Pierwszy zakład musi być >0!");
 				Decode(getAction());
 			}
 		}
@@ -106,7 +106,7 @@ public class LastBid extends TableState {
 		Limit lim = tab.getLimit();
 
 		if ((status == PlayerStatus.max_bet_nbb)) {
-			tab.getSystemPlayer(CurrPlayer).notify("Nie mozna przebijać swoich zakładów!");
+			tab.getSystemPlayer(CurrPlayer).notify("err:Nie mozna przebijać swoich zakładów!");
 			Decode(getAction());
 		} else if (betincr > 0) {
 			int diff = maxBet + betincr - currBet;
@@ -120,19 +120,19 @@ public class LastBid extends TableState {
 					tab.ChangeActivePlayersStatusExcept(PlayerStatus.under_max_bet, CurrPlayer);
 				} catch (NotEnoughCreditsException ex) {
 					tab.getSystemPlayer(CurrPlayer)
-							.notify("Za mało żetonów aby przebić maksymalny zakład o podaną stawkę!");
+							.notify("err:Za mało żetonów aby przebić maksymalny zakład o podaną stawkę!");
 					Decode(getAction());
 				}
 			} else {
 				if (lim == Limit.pot_limit) {
-					tab.getSystemPlayer(CurrPlayer).notify("Nie można podbijać o więcej niż jest w puli! (pot-limit)");
+					tab.getSystemPlayer(CurrPlayer).notify("err:Nie można podbijać o więcej niż jest w puli! (pot-limit)");
 				} else {
 					if (raiseCounter >= maxRaiseCount) {
 						tab.getSystemPlayer(CurrPlayer).notify(
-								"Przekroczono dopuszczalną liczbę podbić w tej rundzie licytacji (fixed-limit)!");
+								"err:Przekroczono dopuszczalną liczbę podbić w tej rundzie licytacji (fixed-limit)!");
 					} else {
 						tab.getSystemPlayer(CurrPlayer)
-								.notify("Podana wartość przekracz limit podbicia (fixed-limit)!");
+								.notify("err:Podana wartość przekracz limit podbicia (fixed-limit)!");
 					}
 
 				}
@@ -140,7 +140,7 @@ public class LastBid extends TableState {
 			}
 
 		} else {
-			tab.getSystemPlayer(CurrPlayer).notify("Trzeba przebić o wartość większą niz 0!");
+			tab.getSystemPlayer(CurrPlayer).notify("err:Trzeba przebić o wartość większą niz 0!");
 			Decode(getAction());
 		}
 
@@ -154,11 +154,11 @@ public class LastBid extends TableState {
 				tab.getSystemPlayer(CurrPlayer).incrPlayerBet(maxBet - currBet);
 				tab.getSystemPlayer(CurrPlayer).setPlayerStatus(PlayerStatus.max_bet_nbb);
 			} catch (NotEnoughCreditsException ex) {
-				tab.getSystemPlayer(CurrPlayer).notify("Za mało żetonów aby wyrównać!");
+				tab.getSystemPlayer(CurrPlayer).notify("err:Za mało żetonów aby wyrównać!");
 				Decode(getAction());
 			}
 		} else {
-			tab.getSystemPlayer(CurrPlayer).notify("Aktualny zakład jest już najwyższy!");
+			tab.getSystemPlayer(CurrPlayer).notify("err:Aktualny zakład jest już najwyższy!");
 			// throw new BidLogicErrorException("Błąd licytacji: kolejka wróciła
 			// do gracza o najwyższym zakładzie!");
 			Decode(getAction());
@@ -183,7 +183,7 @@ public class LastBid extends TableState {
 			tab.getSystemPlayer(CurrPlayer).allIn();
 			tab.getSystemPlayer(CurrPlayer).setPlayerStatus(PlayerStatus.all_in);
 		} else {
-			tab.getSystemPlayer(CurrPlayer).notify("Masz wystarczająco dużo żetonów aby wyrównać lub już wyrównałeś!");
+			tab.getSystemPlayer(CurrPlayer).notify("err:Masz wystarczająco dużo żetonów aby wyrównać lub już wyrównałeś!");
 			Decode(getAction());
 		}
 

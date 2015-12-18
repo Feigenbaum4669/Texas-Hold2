@@ -16,6 +16,7 @@ public class SocketPlayer extends Player {
 		ServerSocket listener = new ServerSocket(33223);
 		// try {
 		Socket socket = null;
+		log("Waiting for player to connect to socket");
 		while (socket == null) {
 			try {
 				socket = listener.accept();
@@ -52,6 +53,12 @@ public class SocketPlayer extends Player {
 		return input;
 
 	}
+	
+	protected void setGameInfo(GameInfo gi) {
+		super.setGameInfo(gi);
+		notify(gameInfo.playersInfo());
+		notify(gameInfo.toString());
+	}
 
 	@Override
 	public void readAndSetName() {
@@ -60,54 +67,53 @@ public class SocketPlayer extends Player {
 	}
 
 	@Override
-	public VAction makeAction(gameInfo gi) {
+	public VAction makeAction(GameInfo gi) {
 		setGameInfo(gi);
 
+		notify(gi.tableCardsInfo());
+		notify(gi.cardsInfo());
+		
 		VAction va = new VAction();
-		notify("info ===");
-		notify("* status: " + this.status);
-		notify("* highestBet: " + hBet);
-		notify("* Bank: " + this.bank);
-		notify("* credits: " + this.Credits);
-		notify("* bet: " + this.Bet);
-		notify("========");
-		int i = 0;
-		for (Card c : PlayerCards.getCards()) {
-			notify("* card " + i++ + ": " + c.getRank() + " of " + c.getSuit() + "s");
-		}
-		i = 0;
-		for (Card c : tableCards.getCards()) {
-			notify("* table card " + i++ + ": " + c.getRank() + " of " + c.getSuit() + "s");
-		}
 		notify("your action?");
 		notify("0 - check; 1 - bet; 2 - call; 3 - raise; 4 - fold; 5 - all in; other - exit");
-		Integer command = Integer.parseInt(readFromSocket());
-		Integer value = 0;
-		if (command == 1 || command == 3) {
-			notify("how much do you want to bet?");
-			value = Integer.parseInt(readFromSocket());
-		}
-		switch (command) {
-			case 0 :
+		
+		String command = readFromSocket();
+		Integer value = 0;		
+		while (va.action == null) switch (command) {
+			case "0":
+			case "check":
 				va.action = Action.check;
 				break;
-			case 1 :
+			case "1":
+			case "bet":
 				va.action = Action.bet;
+				notify("how much do you want to bet?");
+				value = Integer.parseInt(readFromSocket());
 				break;
-			case 2 :
+			case "2":
+			case "call":
 				va.action = Action.call;
 				break;
-			case 3 :
+			case "3":
+			case "raise":
 				va.action = Action.raise;
+				notify("how much do you want to bet?");
+				value = Integer.parseInt(readFromSocket());
 				break;
-			case 4 :
+			case "4":
+			case "fold":
 				va.action = Action.fold;
 				break;
-			case 5 :
+			case "5":
+			case "all in":
 				va.action = Action.all_in;
 				break;
-			case 6 :
+			case "6":
+			case "quit":
 				va.action = Action.quit;
+				break;
+			default:
+				notify("response not understood");
 				break;
 		}
 		va.value = value;
